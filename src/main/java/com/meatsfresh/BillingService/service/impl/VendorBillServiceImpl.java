@@ -5,11 +5,13 @@ import com.meatsfresh.BillingService.entity.VendorBill;
 import com.meatsfresh.BillingService.repository.VendorBillRepository;
 import com.meatsfresh.BillingService.service.VendorBillService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+@Service
 public class VendorBillServiceImpl implements VendorBillService {
 
     private final VendorBillRepository vendorBillRepository;
@@ -25,7 +27,7 @@ public class VendorBillServiceImpl implements VendorBillService {
         double vendorPayout=totalOrderValue-totalCommission;
 
         VendorBill bill=new VendorBill();
-        bill.setBillId(String.valueOf(UUID.randomUUID()));
+        bill.setBillId(UUID.randomUUID().toString());
         bill.setVendorId(vendorId);
         bill.setOrderIds(orderIds);
         bill.setTotalOrderValue(totalOrderValue);
@@ -46,5 +48,14 @@ public class VendorBillServiceImpl implements VendorBillService {
     @Override
     public VendorBill getBillById(String billId) {
         return vendorBillRepository.findById(billId).orElse(null);
+    }
+
+    @Override
+    public VendorBill markAsPaid(String billId) {
+        VendorBill bill = vendorBillRepository.findById(billId)
+                .orElseThrow(() -> new RuntimeException("Bill not found with ID: " + billId));
+
+        bill.setStatus(BillStatus.PAID);
+        return vendorBillRepository.save(bill);
     }
 }

@@ -15,4 +15,6 @@ public interface VendorBillService {
 
     public VendorBill getBillById(String billId);
 
+    VendorBill markAsPaid(String billId);
+
 }

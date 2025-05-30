@@ -9,7 +9,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
-@RestController("/api/billing")
+@RestController
+@RequestMapping("/api/billing")
 public class VendorBillController {
 
     private final VendorBillService vendorBillService;
@@ -48,5 +49,11 @@ public class VendorBillController {
         VendorBill bill=vendorBillService.getBillById(billId);
         if(bill==null) return ResponseEntity.notFound().build();
         return ResponseEntity.ok(bill);
+    }
+
+    @PutMapping("/mark-paid/{billId}")
+    public ResponseEntity<VendorBill> markBillAsPaid(@PathVariable String billId) {
+        VendorBill updatedBill = vendorBillService.markAsPaid(billId);
+        return ResponseEntity.ok(updatedBill);
     }
 }
