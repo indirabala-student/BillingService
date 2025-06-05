@@ -19,12 +19,12 @@ public class VendorBill {
     @Id
     private String billId;
 
-    private String vendorId;
+    private Long vendorId;
 
     @ElementCollection
     @CollectionTable(name = "billing_order_ids", joinColumns = @JoinColumn(name = "billing_id"))
     @Column(name = "order_id")
-    private List<String> orderIds;
+    private List<Long> orderIds;
 
     private double totalOrderValue;
 
@@ -46,19 +46,19 @@ public class VendorBill {
         this.billId = billId;
     }
 
-    public String getVendorId() {
+    public Long getVendorId() {
         return vendorId;
     }
 
-    public void setVendorId(String vendorId) {
+    public void setVendorId(Long vendorId) {
         this.vendorId = vendorId;
     }
 
-    public List<String> getOrderIds() {
+    public List<Long> getOrderIds() {
         return orderIds;
     }
 
-    public void setOrderIds(List<String> orderIds) {
+    public void setOrderIds(List<Long> orderIds) {
         this.orderIds = orderIds;
     }
 
