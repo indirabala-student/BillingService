@@ -3,7 +3,6 @@ package com.meatsfresh.BillingService.scheduler;
 import com.meatsfresh.BillingService.entity.VendorBill;
 import com.meatsfresh.BillingService.service.VendorBillService;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -11,7 +10,6 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.util.List;
-import java.util.logging.Logger;
 
 @Component
 @RequiredArgsConstructor
@@ -29,6 +27,6 @@ public class VendorBillScheduler {
         LocalDate lastWednesday = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.WEDNESDAY));
         LocalDate thisWednesday = lastWednesday.plusDays(6); // Week ends on next Tuesday 11:59 PM
 
-        List<VendorBill> bills = vendorBillService.generateVendorBills(lastWednesday, thisWednesday);
+        List<VendorBill> bills = vendorBillService.saveAllVendorBills(lastWednesday, thisWednesday);
     }
 }

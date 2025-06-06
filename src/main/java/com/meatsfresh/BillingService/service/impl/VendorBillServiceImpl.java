@@ -13,11 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,25 +25,6 @@ public class VendorBillServiceImpl implements VendorBillService {
     private final VendorBillUtil billUtil;
 
     private final VendorOrderAggregatorService aggregatorService;
-
-    @Override
-    public VendorBill generateVendorBill(Long vendorId, List<Long> orderIds, double totalOrderValue, double commissionRate, LocalDateTime fromDate, LocalDateTime toDate) {
-        double totalCommission=totalOrderValue*commissionRate;
-        double vendorPayout=totalOrderValue-totalCommission;
-
-        VendorBill bill=new VendorBill();
-        bill.setBillId(UUID.randomUUID().toString());
-        bill.setVendorId(vendorId);
-        bill.setOrderIds(orderIds);
-        bill.setTotalOrderValue(totalOrderValue);
-        bill.setTotalCommission(totalCommission);
-        bill.setVendorPayment(vendorPayout);
-        bill.setStatus(BillStatus.GENERATED);
-        bill.setFromDate(fromDate);
-        bill.setToDate(toDate);
-
-        return vendorBillRepository.save(bill);
-    }
 
     @Override
     public List<VendorBill> getBillsByVendorId(Long vendorId) {
@@ -74,7 +51,7 @@ public class VendorBillServiceImpl implements VendorBillService {
     }
 
     @Override
-    public List<VendorBill> generateVendorBills(LocalDate start, LocalDate end) {
+    public List<VendorBill> saveAllVendorBills(LocalDate start, LocalDate end) {
         List<VendorBill> bills = billUtil.generateBills(start, end)
                 .stream()
                 .filter(Objects::nonNull)
