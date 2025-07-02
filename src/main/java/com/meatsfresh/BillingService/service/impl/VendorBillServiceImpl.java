@@ -1,8 +1,5 @@
 package com.meatsfresh.BillingService.service.impl;
 
-import com.meatsfresh.BillingService.constants.Constants;
-import com.meatsfresh.BillingService.dto.OrderDTO;
-import com.meatsfresh.BillingService.dto.VendorDTO;
 import com.meatsfresh.BillingService.entity.BillStatus;
 import com.meatsfresh.BillingService.entity.VendorBill;
 import com.meatsfresh.BillingService.repository.VendorBillRepository;

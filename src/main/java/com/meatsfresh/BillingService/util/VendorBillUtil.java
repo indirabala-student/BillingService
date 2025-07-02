@@ -1,7 +1,7 @@
 package com.meatsfresh.BillingService.util;
 
 import com.meatsfresh.BillingService.constants.Constants;
-import com.meatsfresh.BillingService.dto.OrderDTO;
+import com.meatsfresh.BillingService.dto.OrderVendorSummaryDTO;
 import com.meatsfresh.BillingService.dto.VendorDTO;
 import com.meatsfresh.BillingService.entity.BillStatus;
 import com.meatsfresh.BillingService.entity.VendorBill;
@@ -21,17 +21,17 @@ public class VendorBillUtil {
     private final VendorOrderAggregatorService aggregatorService;
 
     public VendorBill generateVendorBill(Long vendorId, LocalDate start, LocalDate end){
-        List<OrderDTO> orders=aggregatorService.getOrdersByVendorWithDateRange(vendorId,start,end);
+        List<OrderVendorSummaryDTO> orders=aggregatorService.getOrdersByVendorWithDateRange(vendorId,start,end);
         if (orders == null || orders.isEmpty()) {
             return null;
         }
 
         List<Long> orderIds = orders.stream()
-                .map(OrderDTO::getOrderId)
+                .map(OrderVendorSummaryDTO::getOrderId)
                 .toList();
 
         double totalOrderValue = orders.stream()
-                .mapToDouble(OrderDTO::getOrderValue)
+                .mapToDouble(OrderVendorSummaryDTO::getOrderValue)
                 .sum();
 
         double commissionRate = Constants.VENDOR_COMMISSION_FOR_PLATFORM;

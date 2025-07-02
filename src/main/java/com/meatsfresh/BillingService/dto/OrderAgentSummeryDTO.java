@@ -2,10 +2,10 @@ package com.meatsfresh.BillingService.dto;
 
 import java.time.LocalDate;
 
-public class OrderDTO {
+public class OrderAgentSummeryDTO {
 
     private Long orderId;
-    private Long vendorId;
+    private Long agentId;
     private Double orderValue;
     private LocalDate deliveredDate;
 
@@ -17,12 +17,12 @@ public class OrderDTO {
         this.orderId = orderId;
     }
 
-    public Long getVendorId() {
-        return vendorId;
+    public Long getAgentId() {
+        return agentId;
     }
 
-    public void setVendorId(Long vendorId) {
-        this.vendorId = vendorId;
+    public void setAgentId(Long agentId) {
+        this.agentId = agentId;
     }
 
     public Double getOrderValue() {

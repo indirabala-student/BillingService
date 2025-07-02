@@ -15,4 +15,6 @@ public class ServiceUrlProperties {
 
     private String orderBaseUrl;
 
+    private String agentBaseUrl;
+
 }

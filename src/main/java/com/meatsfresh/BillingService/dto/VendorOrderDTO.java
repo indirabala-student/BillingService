@@ -9,7 +9,7 @@ import java.util.List;
 public class VendorOrderDTO {
 
     private VendorDTO vendor;
-    private List<OrderDTO> orders;
+    private List<OrderVendorSummaryDTO> orders;
 
     public VendorDTO getVendor() {
         return vendor;
@@ -19,11 +19,11 @@ public class VendorOrderDTO {
         this.vendor = vendor;
     }
 
-    public List<OrderDTO> getOrders() {
+    public List<OrderVendorSummaryDTO> getOrders() {
         return orders;
     }
 
-    public void setOrders(List<OrderDTO> orders) {
+    public void setOrders(List<OrderVendorSummaryDTO> orders) {
         this.orders = orders;
     }
 }

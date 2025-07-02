@@ -1,48 +1,48 @@
 package com.meatsfresh.BillingService.service;
 
 import com.meatsfresh.BillingService.config.ServiceUrlProperties;
-import com.meatsfresh.BillingService.dto.OrderVendorSummaryDTO;
-import com.meatsfresh.BillingService.dto.VendorDTO;
+import com.meatsfresh.BillingService.dto.AgentDTO;
+import com.meatsfresh.BillingService.dto.OrderAgentSummeryDTO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.LocalDate;
 import java.util.List;
 
-@Service
+@Component
 @RequiredArgsConstructor
-public class VendorOrderAggregatorService {
+public class AgentOrderAggregatorService {
 
     private final WebClient.Builder webClientBuilder;
 
     private final ServiceUrlProperties serviceUrlProperties;
 
-    public List<VendorDTO> getAllVendors() {
+    public List<AgentDTO> getAllAgents() {
         return webClientBuilder.build()
                 .get()
-                .uri(serviceUrlProperties.getVendorBaseUrl())
+                .uri(serviceUrlProperties.getAgentBaseUrl())
                 .retrieve()
-                .bodyToFlux(VendorDTO.class)
+                .bodyToFlux(AgentDTO.class)
                 .collectList()
                 .block();
     }
 
-    public List<OrderVendorSummaryDTO> getOrdersByVendorWithDateRange(Long vendorId, LocalDate start, LocalDate end){
+    public List<OrderAgentSummeryDTO> getOrdersByAgentWithDateRange(Long agentId, LocalDate start, LocalDate end){
 
         String url = UriComponentsBuilder.fromUriString(serviceUrlProperties.getOrderBaseUrl())
-                .path("/vendor/{vendorId}/filter")
+                .path("/agent/{agentId}/filter")
                 .queryParam("start", start)
                 .queryParam("end", end)
-                .buildAndExpand(vendorId)
+                .buildAndExpand(agentId)
                 .toUriString();
 
         return webClientBuilder.build()
                 .get()
                 .uri(url)
                 .retrieve()
-                .bodyToFlux(OrderVendorSummaryDTO.class)
+                .bodyToFlux(OrderAgentSummeryDTO.class)
                 .collectList()
                 .block();
     }

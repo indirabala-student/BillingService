@@ -14,15 +14,15 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class VendorBill {
+public class AgentBill {
 
     @Id
     private String billId;
 
-    private Long vendorId;
+    private Long agentId;
 
     @ElementCollection
-    @CollectionTable(name = "vendor_billing_order_ids", joinColumns = @JoinColumn(name = "billing_id"))
+    @CollectionTable(name = "agent_billing_order_ids", joinColumns = @JoinColumn(name = "billing_id"))
     @Column(name = "order_id")
     private List<Long> orderIds;
 
@@ -30,7 +30,7 @@ public class VendorBill {
 
     private double totalCommission;
 
-    private double vendorPayment;
+    private double agentPayment;
 
     private LocalDateTime fromDate;
 
@@ -46,12 +46,12 @@ public class VendorBill {
         this.billId = billId;
     }
 
-    public Long getVendorId() {
-        return vendorId;
+    public Long getAgentId() {
+        return agentId;
     }
 
-    public void setVendorId(Long vendorId) {
-        this.vendorId = vendorId;
+    public void setAgentId(Long agentId) {
+        this.agentId = agentId;
     }
 
     public List<Long> getOrderIds() {
@@ -78,12 +78,12 @@ public class VendorBill {
         this.totalCommission = totalCommission;
     }
 
-    public double getVendorPayment() {
-        return vendorPayment;
+    public double getAgentPayment() {
+        return agentPayment;
     }
 
-    public void setVendorPayment(double vendorPayment) {
-        this.vendorPayment = vendorPayment;
+    public void setAgentPayment(double agentPayment) {
+        this.agentPayment = agentPayment;
     }
 
     public LocalDateTime getFromDate() {
