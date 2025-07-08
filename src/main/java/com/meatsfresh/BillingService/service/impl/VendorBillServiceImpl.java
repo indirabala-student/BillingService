@@ -2,6 +2,7 @@ package com.meatsfresh.BillingService.service.impl;
 
 import com.meatsfresh.BillingService.entity.BillStatus;
 import com.meatsfresh.BillingService.entity.VendorBill;
+import com.meatsfresh.BillingService.exception.DateRangeConflictException;
 import com.meatsfresh.BillingService.repository.VendorBillRepository;
 import com.meatsfresh.BillingService.service.VendorBillService;
 import com.meatsfresh.BillingService.service.VendorOrderAggregatorService;
@@ -10,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -44,7 +47,23 @@ public class VendorBillServiceImpl implements VendorBillService {
 
     @Override
     public VendorBill saveVendorBill(Long vendorId, LocalDate start, LocalDate end) {
-        return vendorBillRepository.save(billUtil.generateVendorBill(vendorId,start,end));
+        LocalDateTime fromDateTime = start.atStartOfDay();              // 2025-06-01T00:00
+        LocalDateTime toDateTime = end.atTime(LocalTime.MAX);          // 2025-06-07T23:59:59.999999999
+
+        List<VendorBill> overlappingBills = vendorBillRepository.findOverlappingBillsByVendor(
+                vendorId, fromDateTime, toDateTime);
+
+        if (!overlappingBills.isEmpty()) {
+            VendorBill conflict = overlappingBills.get(0);
+            throw new DateRangeConflictException("Bill already generated for vendor " + vendorId +
+                    " in range: " + conflict.getFromDate().toLocalDate() + " to " + conflict.getToDate().toLocalDate());
+        }
+        VendorBill generatedBill=billUtil.generateVendorBill(vendorId, start, end);
+
+        if (generatedBill == null) {
+            throw new IllegalStateException("Bill generation failed for vendor: " + vendorId);
+        }
+        return vendorBillRepository.save(generatedBill);
     }
 
     @Override

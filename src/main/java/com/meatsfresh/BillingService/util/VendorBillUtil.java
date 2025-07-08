@@ -5,6 +5,7 @@ import com.meatsfresh.BillingService.dto.OrderVendorSummaryDTO;
 import com.meatsfresh.BillingService.dto.VendorDTO;
 import com.meatsfresh.BillingService.entity.BillStatus;
 import com.meatsfresh.BillingService.entity.VendorBill;
+import com.meatsfresh.BillingService.exception.NoOrdersFoundException;
 import com.meatsfresh.BillingService.service.VendorOrderAggregatorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -23,7 +24,8 @@ public class VendorBillUtil {
     public VendorBill generateVendorBill(Long vendorId, LocalDate start, LocalDate end){
         List<OrderVendorSummaryDTO> orders=aggregatorService.getOrdersByVendorWithDateRange(vendorId,start,end);
         if (orders == null || orders.isEmpty()) {
-            return null;
+            throw new NoOrdersFoundException("No orders found for vendor " + vendorId +
+                " between " + start + " and " + end);
         }
 
         List<Long> orderIds = orders.stream()
