@@ -26,6 +26,12 @@ public class AgentBillController {
         return ResponseEntity.ok(bill);
     }
 
+    /**
+     * ------ generate and save all vendor bills -------
+     *  exposed to only admin (or)
+     *  Only scheduler can hit this endpoint
+     *  no one else can use this endpoint
+     */
     @PostMapping("/saveAll")
     public ResponseEntity<List<AgentBill>> saveBills(@RequestParam LocalDate start, @RequestParam LocalDate end){
         List<AgentBill> bills= agentBillService.saveAllAgentBills(start,end);
