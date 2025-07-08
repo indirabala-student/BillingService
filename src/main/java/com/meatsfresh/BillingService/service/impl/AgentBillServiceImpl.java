@@ -2,6 +2,8 @@ package com.meatsfresh.BillingService.service.impl;
 
 import com.meatsfresh.BillingService.entity.AgentBill;
 import com.meatsfresh.BillingService.entity.BillStatus;
+import com.meatsfresh.BillingService.entity.VendorBill;
+import com.meatsfresh.BillingService.exception.DateRangeConflictException;
 import com.meatsfresh.BillingService.repository.AgentBillRepository;
 import com.meatsfresh.BillingService.service.AgentBillService;
 import com.meatsfresh.BillingService.service.AgentOrderAggregatorService;
@@ -10,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -45,6 +49,17 @@ public class AgentBillServiceImpl implements AgentBillService {
 
     @Override
     public AgentBill saveAgentBill(Long agentId, LocalDate start, LocalDate end) {
+        LocalDateTime fromDateTime = start.atStartOfDay();
+        LocalDateTime toDateTime = end.atTime(LocalTime.MAX);
+
+        List<AgentBill> overlappingBills = agentBillRepository.findOverlappingBillsByAgent(
+                agentId, fromDateTime, toDateTime);
+
+        if (!overlappingBills.isEmpty()) {
+            AgentBill conflict = overlappingBills.get(0);
+            throw new DateRangeConflictException("Bill already generated for agent " + agentId +
+                    " in range: " + conflict.getFromDate().toLocalDate() + " to " + conflict.getToDate().toLocalDate());
+        }
         return agentBillRepository.save(billUtil.generateAgentBill(agentId,start,end));
     }
 

@@ -10,6 +10,13 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ *   vendor bill controller
+ *
+ */ /**
+ *  vendor bill controller
+ *
+ */
 @RestController
 @RequestMapping("/api/vendor-billing")
 @RequiredArgsConstructor
@@ -24,6 +31,14 @@ public class VendorBillController {
             VendorBill bill=vendorBillService.saveVendorBill(vendorId,start,end);
             return ResponseEntity.ok(bill);
     }
+
+
+    /**
+     * ------ generate and save all vendor bills -------
+     *  exposed to only admin (or)
+     *  Only scheduler can hit this endpoint
+     *  no one else can use this endpoint
+     */
 
     @PostMapping("/saveAll")
     public ResponseEntity<List<VendorBill>> saveBills(@RequestParam LocalDate start, @RequestParam LocalDate end){

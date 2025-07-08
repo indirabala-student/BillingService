@@ -47,8 +47,8 @@ public class VendorBillServiceImpl implements VendorBillService {
 
     @Override
     public VendorBill saveVendorBill(Long vendorId, LocalDate start, LocalDate end) {
-        LocalDateTime fromDateTime = start.atStartOfDay();              // 2025-06-01T00:00
-        LocalDateTime toDateTime = end.atTime(LocalTime.MAX);          // 2025-06-07T23:59:59.999999999
+        LocalDateTime fromDateTime = start.atStartOfDay();
+        LocalDateTime toDateTime = end.atTime(LocalTime.MAX);
 
         List<VendorBill> overlappingBills = vendorBillRepository.findOverlappingBillsByVendor(
                 vendorId, fromDateTime, toDateTime);
@@ -58,12 +58,7 @@ public class VendorBillServiceImpl implements VendorBillService {
             throw new DateRangeConflictException("Bill already generated for vendor " + vendorId +
                     " in range: " + conflict.getFromDate().toLocalDate() + " to " + conflict.getToDate().toLocalDate());
         }
-        VendorBill generatedBill=billUtil.generateVendorBill(vendorId, start, end);
-
-        if (generatedBill == null) {
-            throw new IllegalStateException("Bill generation failed for vendor: " + vendorId);
-        }
-        return vendorBillRepository.save(generatedBill);
+        return vendorBillRepository.save(billUtil.generateVendorBill(vendorId, start, end));
     }
 
     @Override
